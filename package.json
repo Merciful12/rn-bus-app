@@ -5,12 +5,18 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "react-native run-ios --simulator=\"iPhone 6\"",
+    "android-emulator": "~/Library/Android/sdk/emulator/emulator -avd Pixel_API_28 -netdelay none -netspeed full",
+    "android": "react-native run-android",
     "test": "jest"
   },
   "dependencies": {
+    "apollo-boost": "^0.3.1",
+    "graphql": "^14.2.1",
     "react": "16.8.3",
+    "react-apollo-hooks": "^0.4.5",
     "react-native": "0.59.4",
     "react-native-gesture-handler": "^1.1.0",
+    "react-native-maps": "^0.24.2",
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.8.1"
   },

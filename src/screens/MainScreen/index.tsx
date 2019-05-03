@@ -1,44 +1,32 @@
-import React, { useState } from 'react'
-import { View, Text, Button, ViewStyle, TextStyle, StyleSheet } from 'react-native'
-import { NavigationScreenProps, NavigationScreenComponent } from 'react-navigation'
-import { ROUTES } from '../../navigator';
+import React from 'react'
+import { View, StyleSheet, Dimensions } from 'react-native'
+import MapView from 'react-native-maps'
 
-interface IProps extends NavigationScreenProps {}
-
-const HomeScreen: NavigationScreenComponent<IProps> = ({navigation}) => {
-  const [count, setCount] = useState(0)
-
-  function navigateToSettings () {
-    navigation.navigate(ROUTES.Settings, {count})
-  }
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Count - {count}</Text>
-      <Button title="goto details" onPress={navigateToSettings} />
-      <Button title="inc" onPress={() => setCount(count + 1)} />
-      <Button title="reset" onPress={() => setCount(0)} />
-    </View>
-  )
-}
-
-interface IStyles {
-  container: ViewStyle,
-  text: TextStyle
-}
-
-const styles = StyleSheet.create<IStyles>({
+const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    ...StyleSheet.absoluteFillObject,
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
   },
-  text: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
-  }
-})
-
-export default HomeScreen
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+ });
+ 
+export default () => (
+  <View style={styles.container}>
+    <MapView
+      loadingEnabled={true}
+      style={styles.map}
+      region={{
+        latitude: 51.67204,
+        longitude: 39.1843,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+      }}
+    >
+    </MapView>
+  </View>
+)
