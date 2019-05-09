@@ -1,58 +1,50 @@
 import React from 'react'
-import { Platform } from 'react-native'
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation'
+import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-import MainScreen from '../screens/MainScreen'
-import SettingsScreen from '../screens/SettingsScreen'
+import BusstopsMapScreen from '../screens/BusstopsMapScreen/BusstopsMapScreen'
+import BusstopsFavoritesScreen from '../screens/BusstopsFavoritesScreen/BusstopsFavoritesScreen'
+import BusstopDetails from '../screens/BusstopDetailsScreen/BusstopDetailsScreen'
+import { ROUTES } from './routes'
 
-export enum ROUTES {
-  Main = 'Main',
-  Settings = 'Settings'
-}
+import { getPlatformIcon } from '../utils'
 
-const AppNavigator = createBottomTabNavigator(
+
+const allBusstopsTab1 = createStackNavigator({
+  [ROUTES.BusstopsMap]: BusstopsMapScreen,
+  [ROUTES.BusstopDetailsTab1]: BusstopDetails,
+})
+
+const favoritesBusstopsTab2 = createStackNavigator({
+  [ROUTES.BusstopsFavorites]: BusstopsFavoritesScreen,
+  [ROUTES.BusstopDetailsTab2]: BusstopDetails,
+})
+
+const mainTabNavigator = createBottomTabNavigator(
   {
-    [ROUTES.Main]: MainScreen,
-    [ROUTES.Settings]: SettingsScreen
+    tab1: allBusstopsTab1,
+    tab2: favoritesBusstopsTab2,
   },
   {
-    initialRouteName: ROUTES.Main,
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ tintColor }) => {
         const { routeName } = navigation.state
         const color = tintColor || 'gray'
         return getTabBarIcon(routeName, color)
-      }
+      },
     }),
     tabBarOptions: {
       activeTintColor: 'tomato',
       inactiveTintColor: 'gray',
+      showLabel: false
     },
   }
 )
 
 function getTabBarIcon (routeName: string, color: string): React.ReactElement {
-  let iconName
-  switch (routeName) {
-    case ROUTES.Main:
-      iconName = 'bus'
-      break
-    case ROUTES.Settings:
-      iconName = 'cog'
-      break
-    default:
-      iconName = 'help'
-      break
-  }
+  const iconName = (routeName === 'tab1') ? 'map' : 'heart'
 
-  const prefix = Platform.select({
-    ios: 'ios',
-    android: 'md'
-  })
-
-  iconName = `${prefix}-${iconName}`
-  return <Icon name={iconName} size={25} color={color} />
+  return <Icon name={getPlatformIcon(iconName)} size={30} color={color} />
 }
 
-export default createAppContainer(AppNavigator)
+export default createAppContainer(mainTabNavigator)
