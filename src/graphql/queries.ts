@@ -20,12 +20,11 @@ query getAllBusstops {
 export const GET_BUSSTOP = gql`
 query getBusstop($id: ID!) {
   busstopDetails(id: $id) {
+    ...busstopFragment
     busTimes {
       busName
       nextArrival
     }
-    isFavorite @client
-    ...busstopFragment
   }
 }${busstopFragment}
 `
@@ -36,14 +35,7 @@ export const TOGGLE_FAVORITE_BUSSTOP = gql`
   }
 `
 
-export const GET_FAVORITES_BUSSTOPS = gql`
-query getAllfavoritesBusstops {
-  favoritesBusstops @client {
-    name
-    id
-  }
-}
-`
+
 
 interface IArrival {
   busName: string,
@@ -70,11 +62,3 @@ export interface IBusstopDetails {
 export interface IVariables {
   id: number
 }
-export interface IFavorite {
-  id: string,
-  name: string
-}
-export interface IFavorites {
-  favoritesBusstops: IFavorite[]
-}
-

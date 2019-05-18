@@ -2,28 +2,33 @@ import React, { FC } from 'react'
 import { SectionList, View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
+import {ActionFunction} from '../../ducks/routes'
+import { getPlatformIcon } from '../../utils'
+
 
 interface IPops {
   data: ISection[],
   refetch: () => void,
+  toggleFavoriteRoute: ActionFunction,
   loading: boolean
 }
 
-const MySectionList: FC<IPops> = ({data, refetch, loading}) => (
+const MySectionList: FC<IPops> = ({data, refetch, loading, toggleFavoriteRoute}) => (
   <SectionList
     sections={data}
     onRefresh={refetch}
     refreshing={loading}
-    renderSectionHeader={renderHeader}
+    renderSectionHeader={(o) => renderHeader(o, toggleFavoriteRoute)}
     keyExtractor={keyExtractor}
     renderItem={renderItem}
   />
 )
 
-const renderHeader = ({section}: any) => (
+const renderHeader = ({section}: any, toggleFavoriteRoute: ActionFunction) => (
   <View style={styles.titleContainer}>
-    <Icon name='ios-bus' size={25} />
+    <Icon name={getPlatformIcon('bus')} size={25} />
     <Text style={styles.title}>{section.key}</Text>
+    <Icon onPress={() => toggleFavoriteRoute(section.key)} style={{marginLeft: 'auto'}} name={getPlatformIcon('star')} size={25} />
   </View>
 )
 

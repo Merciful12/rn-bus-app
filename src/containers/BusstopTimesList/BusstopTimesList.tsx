@@ -1,25 +1,42 @@
 import React, { FC } from 'react'
 import { View, Text, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import Placeholder, { Line, Media } from 'rn-placeholder'
-import { useQuery, useMutation } from 'react-apollo-hooks'
-import _ from 'lodash'
-import { GET_BUSSTOP, TOGGLE_FAVORITE_BUSSTOP, IBusstopDetails, IVariables, IBusstop } from '../../graphql/queries'
-import SectionList, { ISection } from '../../components/SectionList/SectionList'
-import Icon from 'react-native-vector-icons/Ionicons'
+import {Set} from 'immutable'
+import { useQuery } from 'react-apollo-hooks'
+import {connect} from 'react-redux'
 
+import {toggleFavoriteRoute, ActionFunction, favoriteRoutesListSelector} from '../../ducks/routes'
+import {toggleFavoriteBusstop, ActionFun, isFavoriteBusstopSelector} from '../../ducks/busstops'
+import { GET_BUSSTOP, IBusstopDetails, IVariables } from '../../graphql/queries'
+import SectionList from '../../components/SectionList/SectionList'
+import Icon from 'react-native-vector-icons/Ionicons'
+// import { ApplicationState } from '../../redux/reducer'
+import { separateBySections } from '../../utils'
 
 interface IPops  {
-  id: number
+  id: number,
 }
 
-const BusstopTimesList: FC<IPops> = ({id}) => {
+interface IStoreProps {
+  toggleFavoriteRoute: ActionFunction
+  toggleFavoriteBusstop: ActionFun
+  favoriteRoutes: Set<string>
+  isFavoriteBusstop: boolean
+}
+
+const BusstopTimesList: FC<IPops & IStoreProps> = (props) => {
+  const {
+    id,
+    favoriteRoutes,
+    toggleFavoriteRoute,
+    toggleFavoriteBusstop,
+    isFavoriteBusstop
+  } = props
+
   const {loading, data, refetch, error} = useQuery<IBusstopDetails, IVariables>(GET_BUSSTOP, {
     variables: {id},
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
-  })
-
-  const toggleFavorite = useMutation(TOGGLE_FAVORITE_BUSSTOP, {
-    variables: {id}
   })
 
   if (error) {console.log(error); return <Text>error</Text>}
@@ -27,23 +44,25 @@ const BusstopTimesList: FC<IPops> = ({id}) => {
   
   if (loading || !data) return (
     <Placeholder animation="fade">
+      <Line width="100%" />
       <Media hasRadius />
-      <Line width="70%" />
       <Line height={50} />
       <Line />
-      <Line width="30%" />
+      <Line width="100%" />
     </Placeholder>
   )
 
-  
   const { busstopDetails } = data
-  const times = separateBySections(busstopDetails)
-
+  
+  const times = separateBySections(busstopDetails, favoriteRoutes)
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{busstopDetails.name}</Text>
-      <Icon onPress={toggleFavorite} name='ios-heart' color={busstopDetails.isFavorite ? 'tomato' : 'grey'} size={40}/>
-      <SectionList data={times} loading={loading} refetch={refetch} />
+      <Icon onPress={() => toggleFavoriteBusstop(busstopDetails)} name='ios-heart' color={isFavoriteBusstop ? 'tomato' : 'grey'} size={40}/>
+      {times[times.length - 1].key.length
+        ? <SectionList data={times} toggleFavoriteRoute={toggleFavoriteRoute} loading={loading} refetch={refetch} />
+        : <Text>No information</Text>}
     </View>
   )
 }
@@ -66,21 +85,15 @@ const styles = StyleSheet.create<IStyles>({
   }
 })
 
-type separator = (data: IBusstop) => ISection[]
 
-const separateBySections:separator = (data) => {
-  const sections = _.groupBy(data.busTimes, t => t.busName)
-  const arr: ISection[] = []
-  return _.transform(
-    sections, 
-    (result, value, key) => {
-      result.push({
-        key,
-        data: value.map(v => v.nextArrival)
-      })
-    },
-    arr
-  )
+const mapStateToProps = (state: any, props: IPops) => ({
+  favoriteRoutes: favoriteRoutesListSelector(state),
+  isFavoriteBusstop: isFavoriteBusstopSelector(state, props)
+})
+
+const mapDispatchToProps = {
+  toggleFavoriteRoute,
+  toggleFavoriteBusstop,
 }
 
-export default BusstopTimesList
+export default connect(mapStateToProps, mapDispatchToProps)(BusstopTimesList)
