@@ -4,8 +4,8 @@ const busstopFragment = gql`
 fragment busstopFragment on Busstop {
   id
   name
-  lon
-  lat
+  longitude
+  latitude
 }
 `
 
@@ -45,8 +45,8 @@ interface IArrival {
 export interface IBusstop {
   id: number,
   name: string,
-  lon: number,
-  lat: number,
+  longitude: number,
+  latitude: number,
   isFavorite?: boolean,
   busTimes: [IArrival]
 }

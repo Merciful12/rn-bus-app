@@ -15,7 +15,7 @@ const Map: FC<IProps> = ({busstops, onPress}) => (
     style={styles.map}
     onMarkerPress={onPress}
     customMapStyle={customStylesMap}
-    region={region}
+    zoomEnabled={false}
     initialRegion={region}
   >
     {busstops.map(busstop => (
@@ -24,8 +24,8 @@ const Map: FC<IProps> = ({busstops, onPress}) => (
         identifier={`${busstop.id}`}
         key={busstop.id}
         coordinate={{
-          latitude: busstop.lat,
-          longitude: busstop.lon
+          latitude: busstop.latitude,
+          longitude: busstop.longitude
         }}
       >
         <Image source={stationIcon} style={styles.marker} />
@@ -52,6 +52,7 @@ const styles = StyleSheet.create<IStyles>({
     ...StyleSheet.absoluteFillObject,
   },
   marker: {
+    margin: 10,
     width: 40,
     height: 25,
   }

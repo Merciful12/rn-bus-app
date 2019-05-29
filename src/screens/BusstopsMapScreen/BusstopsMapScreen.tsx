@@ -4,12 +4,15 @@ import { useQuery }  from 'react-apollo-hooks'
 import { NavigationScreenComponent as NSC, NavigationScreenProps as NSP } from 'react-navigation'
 
 import Map from '../../components/Map/Map'
+import MapCluster from '../../components/Map/MapCluster'
 import { GET_ALL_BUSSTOPS, IBusstops } from '../../graphql/queries'
 import { ROUTES } from '../../navigator/routes'
 
 
 const BusstopMap: NSC<NSP> = ({navigation}) => {
-  const { data, loading } = useQuery<IBusstops>(GET_ALL_BUSSTOPS)
+  const { data, loading } = useQuery<IBusstops>(GET_ALL_BUSSTOPS, {
+    fetchPolicy: 'cache-first'
+  })
   
   const navigateToDetails = useCallback(
     (e) => navigation.navigate(ROUTES.BusstopDetailsTab1, {busstopId: e.nativeEvent.id}),
@@ -21,7 +24,7 @@ const BusstopMap: NSC<NSP> = ({navigation}) => {
       {loading || !data
       ? null
       : (
-        <Map busstops={data.busstops} onPress={navigateToDetails} />
+        <MapCluster busstops={data.busstops} onPress={navigateToDetails} />
       )}
     </View>
   )
