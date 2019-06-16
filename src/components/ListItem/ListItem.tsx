@@ -1,17 +1,19 @@
 import React, { FC, useCallback } from 'react'
-import { Text, StyleSheet, TextStyle, TouchableWithoutFeedback, View} from 'react-native'
+import { StyleSheet, TextStyle, TouchableWithoutFeedback, View} from 'react-native'
+import * as MagicMove from 'react-native-magic-move'
+import 'react-navigation-magic-move'
 
 import Card from '../Card/Card'
 import { IBusstopFavorite } from '../../ducks/busstops'
 
 interface IProps {
   busstop: IBusstopFavorite,
-  onPress: (id: number | null) => void
+  onPress: (busstop: IBusstopFavorite) => void
 }
 
 const ListItem: FC<IProps> = ({busstop, onPress}) => {
-  const onPressItem = useCallback (
-    () => onPress(busstop.id),
+  const onPressItem = useCallback(
+    () => onPress(busstop),
     [busstop.id]
   )
 
@@ -19,7 +21,14 @@ const ListItem: FC<IProps> = ({busstop, onPress}) => {
     <TouchableWithoutFeedback onPress={onPressItem}>
       <View>
         <Card>
-          <Text style={styles.busName}>{busstop.name}</Text>
+          <MagicMove.Text
+            duration={300}
+            useNativeClone
+            id={`scene-${busstop.id}.text`} 
+            style={styles.busName}
+          >
+            {busstop.name}
+          </MagicMove.Text>
         </Card>
       </View>
     </TouchableWithoutFeedback>

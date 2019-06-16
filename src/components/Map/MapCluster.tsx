@@ -1,31 +1,27 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC, useMemo  } from 'react'
 import { StyleSheet, ImageStyle, View, Text, Image, ViewStyle, TextStyle } from 'react-native'
 import { Marker, MapEvent, Callout } from 'react-native-maps'
 import ClusterMap from 'react-native-maps-super-cluster'
 
 import { IBusstop } from '../../graphql/queries'
+import { getPlatformIcon } from '../../utils'
 
 const stationIcon = require('../../assets/icons/station.png')
 
 interface IProps {
   busstops: IBusstop[],
-  onPress: (e: MapEvent) => void,
+  onPress: (e: MapEvent<{ action: 'marker-press', id: string }>) => void,
 }
 
 const renderCluster = (cluster, onPress) => {
   const {pointCount, coordinate, clusterId} = cluster
   return (
     <Marker identifier={`cluster-${clusterId}`} coordinate={coordinate} onPress={onPress}>
-      <View style={styles.clusterContainer}>
-        <Text style={styles.clusterText}>
-          {pointCount}
-        </Text>
-      </View>
     </Marker>
   )
 }
 
-const renderMarker = (busstop) => {  
+const renderMarker = (busstop) => {
   return(
   <Marker
     tracksViewChanges={false}
@@ -33,13 +29,12 @@ const renderMarker = (busstop) => {
     key={busstop.id}
     coordinate={busstop.location}
     >
-      {/* <Image source={stationIcon} style={styles.marker} />
-      <Callout tooltip /> */}
+      <Image source={stationIcon} style={styles.marker} />
+      <Callout tooltip />
   </Marker>
 )}
 
 const Map: FC<IProps> = ({busstops, onPress}) => {
-
   const buses = useMemo(() => busstops.map(bus => ({
     ...bus,
     location: {
@@ -47,17 +42,23 @@ const Map: FC<IProps> = ({busstops, onPress}) => {
       latitude: bus.latitude
     }})), [])
 
+  function on(e: MapEvent<{ action: 'marker-press', id: string }>) {
+    return e.nativeEvent.id.includes('cluster') ? null : onPress(e)
+  }
+
   return(
     <ClusterMap
       customMapStyle={customStylesMap}
       style={styles.map}
       data={buses}
-      // onMarkerPress={onPress}
+      showsMyLocationButton
+      followsUserLocation
+      showsUserLocation
+      onMarkerPress={on}
       renderMarker={renderMarker}
       renderCluster={renderCluster}
       initialRegion={region}
-    >
-    </ClusterMap>
+    />
 )}
 
 const region = {
@@ -101,6 +102,7 @@ const styles = StyleSheet.create<IStyles>({
   },
 })
 
+const locationIcon = getPlatformIcon('locate')
 const customStylesMap = [
   {
     "featureType": "transit.station.bus",

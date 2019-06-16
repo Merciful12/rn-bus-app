@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import BusstopsMapScreen from '../screens/BusstopsMapScreen/BusstopsMapScreen'
 import BusstopsFavoritesScreen from '../screens/BusstopsFavoritesScreen/BusstopsFavoritesScreen'
 import BusstopDetails from '../screens/BusstopDetailsScreen/BusstopDetailsScreen'
+import BusstopDetails2 from '../screens/BusstopDetailsScreen/BusstopDetailsScreen2'
 import { ROUTES } from './routes'
 
 import { getPlatformIcon } from '../utils'
@@ -13,11 +14,21 @@ import { getPlatformIcon } from '../utils'
 const allBusstopsTab1 = createStackNavigator({
   [ROUTES.BusstopsMap]: BusstopsMapScreen,
   [ROUTES.BusstopDetailsTab1]: BusstopDetails,
+}, {
+  defaultNavigationOptions: {
+    headerBackTitle: null,
+    headerTintColor: 'black',
+  }
 })
 
 const favoritesBusstopsTab2 = createStackNavigator({
   [ROUTES.BusstopsFavorites]: BusstopsFavoritesScreen,
-  [ROUTES.BusstopDetailsTab2]: BusstopDetails,
+  [ROUTES.BusstopDetailsTab2]: BusstopDetails2,
+}, {
+  defaultNavigationOptions: {
+    headerBackTitle: null,
+    headerTintColor: 'black',
+  }
 })
 
 const mainTabNavigator = createBottomTabNavigator(
@@ -35,7 +46,7 @@ const mainTabNavigator = createBottomTabNavigator(
     }),
     tabBarOptions: {
       activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      inactiveTintColor: 'grey',
       showLabel: false
     },
   }
@@ -47,4 +58,6 @@ function getTabBarIcon (routeName: string, color: string): React.ReactElement {
   return <Icon name={getPlatformIcon(iconName)} size={30} color={color} />
 }
 
-export default createAppContainer(mainTabNavigator)
+const appContainer = createAppContainer(mainTabNavigator)
+
+export default appContainer

@@ -10,23 +10,28 @@
     "test": "jest"
   },
   "dependencies": {
+    "@connected-home/redux-persist": "^6.1.0",
+    "@connected-home/redux-persist-transform-immutable": "ConnectedHomes/redux-persist-transform-immutable",
+    "@react-native-community/async-storage": "^1.4.2",
     "apollo-boost": "^0.3.1",
     "graphql": "^14.2.1",
     "immutable": "^4.0.0-rc.12",
-    "lodash": "^4.17.11",
     "react": "16.8.3",
     "react-apollo-hooks": "^0.4.5",
     "react-native": "0.59.4",
+    "react-native-animatable": "^1.3.2",
     "react-native-gesture-handler": "^1.1.0",
+    "react-native-magic-move": "^0.6.2",
     "react-native-maps": "^0.24.2",
     "react-native-maps-super-cluster": "^1.5.0",
-    "react-native-screens": "^1.0.0-alpha.22",
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.8.1",
+    "react-navigation-magic-move": "^0.4.1",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
     "reselect": "^4.0.0",
-    "rn-placeholder": "^2.0.0"
+    "rn-placeholder": "mfrachet/rn-placeholder"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

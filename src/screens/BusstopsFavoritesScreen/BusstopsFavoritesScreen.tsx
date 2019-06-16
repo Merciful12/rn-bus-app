@@ -5,6 +5,9 @@ import {
   NavigationScreenProps as NSP,
 } from 'react-navigation'
 import { connect } from 'react-redux'
+import * as MagicMove from 'react-native-magic-move'
+import 'react-navigation-magic-move'
+
 
 import { IBusstopFavorite, favoriteBusstopsListSelector } from '../../ducks/busstops'
 import ListItem from '../../components/ListItem/ListItem'
@@ -12,13 +15,14 @@ import { ROUTES } from '../../navigator/routes'
 
 
 interface IProps {
-  favoritesBusstops: IBusstopFavorite[] 
+  favoritesBusstops: IBusstopFavorite[],
+  navigation: NSP
 }
 
 const DeailsScreen: NSC<IProps> = (props) => {
   const {navigation, favoritesBusstops} = props
   const onPress = useCallback(
-    (id) => navigation.navigate(ROUTES.BusstopDetailsTab2, {busstopId: id}),
+    (busstop) => navigation.navigate(ROUTES.BusstopDetailsTab2, {busstopId: busstop.id, busstop}),
     []
   )
 
@@ -31,13 +35,15 @@ const DeailsScreen: NSC<IProps> = (props) => {
   }
   
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={favoritesBusstops}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-      />
-    </View>
+    <MagicMove.Scene>
+      <View style={styles.container}>
+        <FlatList
+          data={favoritesBusstops}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+        />
+      </View>
+    </MagicMove.Scene>
   )
 }
 DeailsScreen.navigationOptions = {
@@ -62,8 +68,8 @@ const styles = StyleSheet.create<IStyles>({
 })
 
 
-const mapStateToProps = state => ({
-  favoritesBusstops: favoriteBusstopsListSelector(state)
-})
+const mapStateToProps = state => {
+  return {favoritesBusstops: favoriteBusstopsListSelector(state)}
+}
 
 export default connect(mapStateToProps)(DeailsScreen)

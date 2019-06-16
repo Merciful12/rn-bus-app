@@ -32,7 +32,7 @@ const styles = Platform.select({
   }),
   android: StyleSheet.create({
     container: {
-      elevation: 4,
+      elevation: 5,
       padding: 10,
       height: 80,
       justifyContent: 'center',

@@ -16,20 +16,21 @@ export enum actionTypes {
 export interface IState {
   favoriteRoutes: Set<string>
 }
-const reducerState = Record<IState>({
+export const routesFavRecord = Record<IState>({
   favoriteRoutes: Set<string>(),
-})
+}, 'routesFavRecord')
 
 export interface IAction extends Action<actionTypes> {
   payload: {route: string}
 }
 
-export default function reducer(state = new reducerState(), action: IAction) {
+export default function reducer(state = new routesFavRecord(), action: IAction) {
+  console.log('routes,   ', state)
   const {type, payload} = action
   switch (type) {
     case actionTypes.TOGGLE_FAVORITE_ROUTE:
       return state.favoriteRoutes.contains(payload.route)
-        ? state.update('favoriteRoutes', v => v.delete(payload.route))//.deleteIn(['favoriteRoutes', payload.route])
+        ? state.update('favoriteRoutes', v => v.delete(payload.route))
         : state.update('favoriteRoutes', v => v.add(payload.route))
 
     default:

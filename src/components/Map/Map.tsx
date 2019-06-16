@@ -52,7 +52,6 @@ const styles = StyleSheet.create<IStyles>({
     ...StyleSheet.absoluteFillObject,
   },
   marker: {
-    margin: 10,
     width: 40,
     height: 25,
   }

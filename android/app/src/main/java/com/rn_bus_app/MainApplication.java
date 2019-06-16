@@ -3,7 +3,8 @@ package com.rn_bus_app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.swmansion.rnscreens.RNScreensPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.ijzerenhein.magicmove.ReactMagicMovePackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -27,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNScreensPackage(),
+            new AsyncStoragePackage(),
+            new ReactMagicMovePackage(),
             new MapsPackage(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage()

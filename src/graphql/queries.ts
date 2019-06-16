@@ -37,18 +37,18 @@ export const TOGGLE_FAVORITE_BUSSTOP = gql`
 
 
 
-interface IArrival {
+export interface IArrival {
   busName: string,
   nextArrival: number
 }
 
 export interface IBusstop {
-  id: number,
+  id: string,
   name: string,
   longitude: number,
   latitude: number,
   isFavorite?: boolean,
-  busTimes: [IArrival]
+  busTimes?: [IArrival]
 }
 
 export interface IBusstops {
@@ -60,5 +60,5 @@ export interface IBusstopDetails {
 }
 
 export interface IVariables {
-  id: number
+  id: string
 }

@@ -13,20 +13,20 @@ export enum actionTypes {
  * Reducer
  * */
 
-export type IState = Map<number | null, IBusstopFavorite> 
+export type IState = Map<string, IBusstopFavorite> 
 export interface IBusstopFavorite {
-  id: number | null,
-  name: string | null
+  id: string,
+  name: string
 }
 
-const reducerState = Record({
-  favoriteBusstops: Map<number | null, IBusstopFavorite>(),
-})
+export const reducerState = Record({
+  favoriteBusstops: Map<string, IBusstopFavorite>(),
+}, 'BusstopFavRecord')
 
-const BusstopFavRecord = Record<IBusstopFavorite>({
-  id: null,
-  name: null
-})
+export const BusstopFavRecord1 = Record<IBusstopFavorite>({
+  id: '',
+  name: ''
+}, 'BusstopFavRecord1')
 
 export interface IAction extends Action<actionTypes> {
   payload: {busstop: IBusstopFavorite}
@@ -38,7 +38,7 @@ export default function reducer(state = new reducerState(), action: IAction) {
     case actionTypes.TOGGLE_FAVORITE_BUSSTOP:
       return state.favoriteBusstops.has(payload.busstop.id)
         ? state.deleteIn(['favoriteBusstops', payload.busstop.id])
-        : state.setIn(['favoriteBusstops', payload.busstop.id], new BusstopFavRecord(payload.busstop))
+        : state.setIn(['favoriteBusstops', payload.busstop.id], new BusstopFavRecord1(payload.busstop))
 
    default:
       return state
@@ -48,7 +48,7 @@ export default function reducer(state = new reducerState(), action: IAction) {
 export const stateSelector = state => state[moduleName]
 export const favoriteBusstopsSelector = createSelector(stateSelector, state => state.favoriteBusstops)
 export const favoriteBusstopsListSelector = createSelector(favoriteBusstopsSelector, favoriteBusstops => favoriteBusstops.valueSeq().toArray())
-export const idSelector = (_, props) => props.id
+export const idSelector = (_, props) => props.navigation.getParam('busstopId')
 export const isFavoriteBusstopSelector = createSelector(favoriteBusstopsSelector, idSelector, (favoriteBusstops, id) => favoriteBusstops.has(id))
 /**
  * Actions

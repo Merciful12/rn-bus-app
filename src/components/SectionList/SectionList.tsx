@@ -6,14 +6,14 @@ import {ActionFunction} from '../../ducks/routes'
 import { getPlatformIcon } from '../../utils'
 
 
-interface IPops {
+interface IProps {
   data: ISection[],
   refetch: () => void,
   toggleFavoriteRoute: ActionFunction,
   loading: boolean
 }
 
-const MySectionList: FC<IPops> = ({data, refetch, loading, toggleFavoriteRoute}) => (
+const MySectionList: FC<IProps> = ({data, refetch, loading, toggleFavoriteRoute}) => (
   <SectionList
     sections={data}
     onRefresh={refetch}
@@ -24,11 +24,14 @@ const MySectionList: FC<IPops> = ({data, refetch, loading, toggleFavoriteRoute})
   />
 )
 
+const busIcon = getPlatformIcon('bus')
+const startIcon = getPlatformIcon('star')
+
 const renderHeader = ({section}: any, toggleFavoriteRoute: ActionFunction) => (
   <View style={styles.titleContainer}>
-    <Icon name={getPlatformIcon('bus')} size={25} />
+    <Icon name={busIcon} size={25} />
     <Text style={styles.title}>{section.key}</Text>
-    <Icon onPress={() => toggleFavoriteRoute(section.key)} style={{marginLeft: 'auto'}} name={getPlatformIcon('star')} size={25} />
+    <Icon onPress={() => toggleFavoriteRoute(section.key)} style={{marginLeft: 'auto'}} name={startIcon} size={25} />
   </View>
 )
 
