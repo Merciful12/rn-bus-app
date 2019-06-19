@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
-import { SectionList, View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native'
+import { View, Text, StyleSheet, ViewStyle, TextStyle, SectionList } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import {ActionFunction} from '../../ducks/routes'
-import { getPlatformIcon } from '../../utils'
+import { getPlatformIcon, pluralForm } from '../../utils'
 
 
 interface IProps {
@@ -13,27 +13,28 @@ interface IProps {
   loading: boolean
 }
 
-const MySectionList: FC<IProps> = ({data, refetch, loading, toggleFavoriteRoute}) => (
-  <SectionList
-    sections={data}
-    onRefresh={refetch}
-    refreshing={loading}
-    renderSectionHeader={(o) => renderHeader(o, toggleFavoriteRoute)}
-    keyExtractor={keyExtractor}
-    renderItem={renderItem}
-  />
-)
+const MySectionList: FC<IProps> = ({data, refetch, loading, toggleFavoriteRoute}) => {
+  const renderHeader = ({section}: any) => (
+    <View style={styles.titleContainer}>
+      <Icon name={busIcon} size={25} />
+      <Text style={styles.title}>{section.key}</Text>
+      <Icon onPress={() => toggleFavoriteRoute(section.key)} style={{marginLeft: 'auto'}} name={startIcon} size={25} />
+    </View>
+  )
+  return (
+    <SectionList
+      sections={data}
+      onRefresh={refetch}
+      refreshing={loading}
+      renderSectionHeader={renderHeader}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+    />
+  )
+  }
 
 const busIcon = getPlatformIcon('bus')
 const startIcon = getPlatformIcon('star')
-
-const renderHeader = ({section}: any, toggleFavoriteRoute: ActionFunction) => (
-  <View style={styles.titleContainer}>
-    <Icon name={busIcon} size={25} />
-    <Text style={styles.title}>{section.key}</Text>
-    <Icon onPress={() => toggleFavoriteRoute(section.key)} style={{marginLeft: 'auto'}} name={startIcon} size={25} />
-  </View>
-)
 
 const keyExtractor = (item: number, index: number) => `${item}-${index}`
 
@@ -41,7 +42,7 @@ const renderItem = ({item}: {item: number}) => (
   <View style={styles.container}>
     <View style={styles.content}>
       <View style={styles.contentHeader}>
-        <Text style={styles.name}>{item} минут</Text>
+        <Text style={styles.name}>{item} {pluralForm(item)}</Text>
       </View>
     </View>
   </View>

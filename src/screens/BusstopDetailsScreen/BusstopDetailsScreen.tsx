@@ -1,20 +1,20 @@
-import React, { FC } from 'react'
+import React from 'react'
 import {Text, View, ViewStyle, TextStyle, StyleSheet} from 'react-native'
-import { NavigationScreenComponent, NavigationScreenProps } from 'react-navigation'
+import { NavigationScreenComponent as NSC, NavigationScreenProps as NSP } from 'react-navigation'
 import { Paragraph } from 'rn-placeholder'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
-
 
 import {ActionFunction} from '../../ducks/routes'
 import {toggleFavoriteBusstop, ActionFun, isFavoriteBusstopSelector} from '../../ducks/busstops'
 
 import BusstopTimesList from '../../containers/BusstopTimesList/BusstopTimesList'
-import { useQuery } from 'react-apollo-hooks';
+import { useQuery } from 'react-apollo-hooks'
 import { IBusstopDetails, IVariables, GET_BUSSTOP } from '../../graphql/queries'
 import { getPlatformIcon } from '../../utils'
+import { IStateApp } from '../../redux/reducer'
 
-interface IProps extends NavigationScreenProps {
+interface INavProps extends NSP {
   busstopId: string
 }
 
@@ -25,7 +25,7 @@ interface IStoreProps {
   isFavoriteBusstop: boolean
 }
 
-const BusstopDetailsScreen: FC<IProps & IStoreProps> = (props) => {
+const BusstopDetailsScreen: NSC<INavProps, {}, IStoreProps> = (props) => {
   const {
     toggleFavoriteBusstop,
     isFavoriteBusstop,
@@ -60,6 +60,7 @@ const BusstopDetailsScreen: FC<IProps & IStoreProps> = (props) => {
                 onPress={() => toggleFavoriteBusstop(data.busstopDetails)}
                 name={heartIcon}
                 size={40}
+                style={{alignSelf: 'flex-end'}}
                 color={isFavoriteBusstop ? 'tomato' : 'grey'} 
               />
               <BusstopTimesList times={data.busstopDetails.busTimes} refetch={refetch} loading={loading} />
@@ -92,10 +93,10 @@ const styles = StyleSheet.create<IStyles>({
 
 const heartIcon = getPlatformIcon('heart')
 
-// BusstopDetailsScreen.navigationOptions = {
-//   headerTitle: 'Detail'
-// }
-const mapStateToProps = (state: any, props: IProps) => ({
+BusstopDetailsScreen.navigationOptions = {
+  headerTitle: 'Остановка'
+}
+const mapStateToProps = (state: any, props: INavProps) => ({
   isFavoriteBusstop: isFavoriteBusstopSelector(state, props)
 })
 

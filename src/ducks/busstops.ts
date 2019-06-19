@@ -1,6 +1,9 @@
 import { Record, Map } from 'immutable'
 import {Action} from 'redux'
 import {createSelector} from 'reselect'
+import { NavigationScreenProps as NSP } from 'react-navigation'
+
+import {IStateApp} from '../redux/reducer'
 /**
  * Constants
  * */
@@ -13,7 +16,8 @@ export enum actionTypes {
  * Reducer
  * */
 
-export type IState = Map<string, IBusstopFavorite> 
+export type IState = ReturnType<typeof reducerState>
+
 export interface IBusstopFavorite {
   id: string,
   name: string
@@ -22,6 +26,7 @@ export interface IBusstopFavorite {
 export const reducerState = Record({
   favoriteBusstops: Map<string, IBusstopFavorite>(),
 }, 'BusstopFavRecord')
+
 
 export const BusstopFavRecord1 = Record<IBusstopFavorite>({
   id: '',
@@ -45,10 +50,10 @@ export default function reducer(state = new reducerState(), action: IAction) {
   }
 }
 
-export const stateSelector = state => state[moduleName]
-export const favoriteBusstopsSelector = createSelector(stateSelector, state => state.favoriteBusstops)
+export const stateSelector = (state: IStateApp) => state[moduleName]
+export const favoriteBusstopsSelector = createSelector(stateSelector, (state: IState) => state.favoriteBusstops)
 export const favoriteBusstopsListSelector = createSelector(favoriteBusstopsSelector, favoriteBusstops => favoriteBusstops.valueSeq().toArray())
-export const idSelector = (_, props) => props.navigation.getParam('busstopId')
+export const idSelector = (_: IState, props: NSP) => props.navigation.getParam('busstopId')
 export const isFavoriteBusstopSelector = createSelector(favoriteBusstopsSelector, idSelector, (favoriteBusstops, id) => favoriteBusstops.has(id))
 /**
  * Actions

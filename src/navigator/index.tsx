@@ -28,6 +28,12 @@ const favoritesBusstopsTab2 = createStackNavigator({
   defaultNavigationOptions: {
     headerBackTitle: null,
     headerTintColor: 'black',
+    headerStyle: {
+      elevation: 0,
+      shadowRadius: 0,
+      backgroundColor: 'orange',
+    },
+    
   }
 })
 
@@ -44,6 +50,7 @@ const mainTabNavigator = createBottomTabNavigator(
         return getTabBarIcon(routeName, color)
       },
     }),
+    initialRouteName: 'tab2',
     tabBarOptions: {
       activeTintColor: 'tomato',
       inactiveTintColor: 'grey',

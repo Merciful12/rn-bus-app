@@ -21,8 +21,7 @@ const BusstopMap: NSC<NSP> = ({navigation}) => {
 }
 
 BusstopMap.navigationOptions = {
-
-  headerTitle: 'Map'
+  header: null
 }
 
 export default BusstopMap

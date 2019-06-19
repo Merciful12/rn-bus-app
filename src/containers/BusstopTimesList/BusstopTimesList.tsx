@@ -7,8 +7,8 @@ import {toggleFavoriteRoute, ActionFunction, favoriteRoutesListSelector} from '.
 import { IArrival } from '../../graphql/queries'
 import SectionList from '../../components/SectionList/SectionList'
 
-// import { ApplicationState } from '../../redux/reducer'
 import { separateBySections } from '../../utils'
+import { IStateApp } from '../../redux/reducer'
 
 interface IPops  {
   times: IArrival[],
@@ -42,7 +42,7 @@ const BusstopTimesList: FC<IPops & IStoreProps> = (props) => {
   )
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: IStateApp) => ({
   favoriteRoutes: favoriteRoutesListSelector(state),
 })
 

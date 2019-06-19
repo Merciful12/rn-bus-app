@@ -35,8 +35,6 @@ export const TOGGLE_FAVORITE_BUSSTOP = gql`
   }
 `
 
-
-
 export interface IArrival {
   busName: string,
   nextArrival: number

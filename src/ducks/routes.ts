@@ -1,6 +1,9 @@
 import { Record, Set } from 'immutable'
 import { Action } from 'redux'
 import {createSelector} from 'reselect'
+
+import {IStateApp} from '../redux/reducer'
+
 /**
  * Constants
  * */
@@ -13,10 +16,9 @@ export enum actionTypes {
  * Reducer
  * */
 
-export interface IState {
-  favoriteRoutes: Set<string>
-}
-export const routesFavRecord = Record<IState>({
+export type IState = ReturnType<typeof routesFavRecord>
+
+export const routesFavRecord = Record({
   favoriteRoutes: Set<string>(),
 }, 'routesFavRecord')
 
@@ -25,7 +27,6 @@ export interface IAction extends Action<actionTypes> {
 }
 
 export default function reducer(state = new routesFavRecord(), action: IAction) {
-  console.log('routes,   ', state)
   const {type, payload} = action
   switch (type) {
     case actionTypes.TOGGLE_FAVORITE_ROUTE:
@@ -38,8 +39,8 @@ export default function reducer(state = new routesFavRecord(), action: IAction) 
   }
 }
 
-export const stateSelector = state => state[moduleName]
-export const favoriteRoutesListSelector = createSelector(stateSelector, state => state.favoriteRoutes)
+export const stateSelector = (state: IStateApp) => state[moduleName]
+export const favoriteRoutesListSelector = createSelector(stateSelector, (state: IState) => state.favoriteRoutes)
 
 /**
  * Actions

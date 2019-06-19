@@ -1,7 +1,9 @@
 import React, { FC, useMemo  } from 'react'
-import { StyleSheet, ImageStyle, View, Text, Image, ViewStyle, TextStyle } from 'react-native'
+import { StyleSheet, ImageStyle, Image, ViewStyle, TextStyle } from 'react-native'
 import { Marker, MapEvent, Callout } from 'react-native-maps'
 import ClusterMap from 'react-native-maps-super-cluster'
+
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import { IBusstop } from '../../graphql/queries'
 import { getPlatformIcon } from '../../utils'
@@ -13,25 +15,24 @@ interface IProps {
   onPress: (e: MapEvent<{ action: 'marker-press', id: string }>) => void,
 }
 
-const renderCluster = (cluster, onPress) => {
-  const {pointCount, coordinate, clusterId} = cluster
+const renderCluster = (cluster: any, onPress: (e: MapEvent) => void) => {
+  const {coordinate, clusterId} = cluster
   return (
-    <Marker identifier={`cluster-${clusterId}`} coordinate={coordinate} onPress={onPress}>
-    </Marker>
+    <Marker icon={stationIcon} identifier={`cluster-${clusterId}`} coordinate={coordinate} onPress={onPress} />
   )
 }
 
-const renderMarker = (busstop) => {
+const renderMarker = (busstop: any) => {
   return(
-  <Marker
-    tracksViewChanges={false}
-    identifier={`${busstop.id}`}
-    key={busstop.id}
-    coordinate={busstop.location}
-    >
-      <Image source={stationIcon} style={styles.marker} />
-      <Callout tooltip />
-  </Marker>
+    <Marker
+      tracksViewChanges={false}
+      identifier={`${busstop.id}`}
+      key={busstop.id}
+      coordinate={busstop.location}
+      >
+        <Icon size={25} color='mediumblue' name='ios-bus' style={styles.marker} />
+        <Callout tooltip />
+    </Marker>
 )}
 
 const Map: FC<IProps> = ({busstops, onPress}) => {
@@ -51,8 +52,8 @@ const Map: FC<IProps> = ({busstops, onPress}) => {
       customMapStyle={customStylesMap}
       style={styles.map}
       data={buses}
-      showsMyLocationButton
-      followsUserLocation
+      // showsMyLocationButton
+      // followsUserLocation
       showsUserLocation
       onMarkerPress={on}
       renderMarker={renderMarker}
@@ -69,7 +70,7 @@ const region = {
 }
 
 interface IStyles {
-  map: any,
+  map: ViewStyle,
   marker: ImageStyle,
   clusterContainer: ViewStyle,
   clusterText: TextStyle
@@ -81,7 +82,7 @@ const styles = StyleSheet.create<IStyles>({
   },
   marker: {
     width: 40,
-    height: 25,
+    height: 40,
   },
   clusterContainer: {
     width: 30,

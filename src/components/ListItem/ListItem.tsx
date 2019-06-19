@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react'
-import { StyleSheet, TextStyle, TouchableWithoutFeedback, View} from 'react-native'
+import { StyleSheet, TextStyle, TouchableWithoutFeedback, View, Text} from 'react-native'
 import * as MagicMove from 'react-native-magic-move'
 import 'react-navigation-magic-move'
 
@@ -22,9 +22,9 @@ const ListItem: FC<IProps> = ({busstop, onPress}) => {
       <View>
         <Card>
           <MagicMove.Text
-            duration={300}
+            duration={400}
             useNativeClone
-            id={`scene-${busstop.id}.text`} 
+            id={`title-${busstop.id}`} 
             style={styles.busName}
           >
             {busstop.name}

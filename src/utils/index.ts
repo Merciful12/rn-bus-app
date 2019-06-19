@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { IBusstop, IArrival } from '../graphql/queries'
+import { IArrival } from '../graphql/queries'
 import { ISection } from '../components/SectionList/SectionList'
 import { Set as ImmutableSet } from 'immutable'
 
@@ -28,10 +28,12 @@ export const separateBySections:separator = (busTimes, favoriteRoutes) => {
     },
     {}
   )
+
+  const busTimesKeys = Object.keys(busTimesByName)
   
   const uniqueBusNames = new Set([
-    ...favoriteRoutes.intersect(Object.keys(busTimesByName)),
-    ...Object.keys(busTimesByName)
+    ...favoriteRoutes.intersect(busTimesKeys),
+    ...busTimesKeys
   ])
   
   const sections: ISection[] = []
@@ -41,4 +43,11 @@ export const separateBySections:separator = (busTimes, favoriteRoutes) => {
   }))
 
   return sections
+}
+
+type pluralFormfn = (n: number) => string
+const titles = ['минута', 'минуты', 'минут']
+const cases = [2, 0, 1, 1, 1, 2] 
+export const pluralForm: pluralFormfn = (number) => {
+  return titles[ (number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5] ]
 }

@@ -12,14 +12,15 @@ import 'react-navigation-magic-move'
 import { IBusstopFavorite, favoriteBusstopsListSelector } from '../../ducks/busstops'
 import ListItem from '../../components/ListItem/ListItem'
 import { ROUTES } from '../../navigator/routes'
+import EmptyList from '../../components/EmptyList/EmptyList'
+import { IStateApp } from '../../redux/reducer'
 
 
 interface IProps {
-  favoritesBusstops: IBusstopFavorite[],
-  navigation: NSP
+  favoritesBusstops: IBusstopFavorite[]
 }
 
-const DeailsScreen: NSC<IProps> = (props) => {
+const DeailsScreen: NSC<NSP, {}, IProps> = (props) => {
   const {navigation, favoritesBusstops} = props
   const onPress = useCallback(
     (busstop) => navigation.navigate(ROUTES.BusstopDetailsTab2, {busstopId: busstop.id, busstop}),
@@ -37,23 +38,21 @@ const DeailsScreen: NSC<IProps> = (props) => {
   return (
     <MagicMove.Scene>
       <View style={styles.container}>
-        <FlatList
-          data={favoritesBusstops}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-        />
+        {favoritesBusstops.length
+          ? <FlatList
+              data={favoritesBusstops}
+              keyExtractor={keyExtractor}
+              renderItem={renderItem}
+            />
+          : <EmptyList message='Здесь будут отображаться избранные остановки.' />
+        }
+        
       </View>
     </MagicMove.Scene>
   )
 }
 DeailsScreen.navigationOptions = {
-  headerTitle: 'Favorites',
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
-  headerStyle: {
-    backgroundColor: 'orange',
-  },
+  headerTitle: 'Избранные'
 }
 
 interface IStyles {
@@ -68,7 +67,7 @@ const styles = StyleSheet.create<IStyles>({
 })
 
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: IStateApp) => {
   return {favoritesBusstops: favoriteBusstopsListSelector(state)}
 }
 

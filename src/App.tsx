@@ -2,12 +2,12 @@ import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import { ApolloProvider } from 'react-apollo-hooks'
 import {Provider} from 'react-redux'
-// import { PersistGate } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import * as MagicMove from 'react-native-magic-move'
 
 
-import {store} from './redux'
+import {store, persister} from './redux'
 
 import { client } from './graphql'
 import AppNavigation from './navigator'
@@ -22,13 +22,13 @@ const App = () => {
   }
   return (
     <Provider store={store}>
-      {/* <PersistGate loading={showActivity()} persistor={persistore}> */}
+      <PersistGate loading={showActivity()} persistor={persister}>
         <ApolloProvider client={client}>
           <MagicMove.Provider>
             <AppNavigation />
           </MagicMove.Provider>
         </ApolloProvider>
-      {/* </PersistGate> */}
+      </PersistGate>
     </Provider>
   )
 }
