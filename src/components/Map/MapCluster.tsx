@@ -1,5 +1,5 @@
 import React, { FC, useMemo  } from 'react'
-import { StyleSheet, ImageStyle, Image, ViewStyle, TextStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 import { Marker, MapEvent, Callout } from 'react-native-maps'
 import ClusterMap from 'react-native-maps-super-cluster'
 
@@ -18,7 +18,7 @@ interface IProps {
 const renderCluster = (cluster: any, onPress: (e: MapEvent) => void) => {
   const {coordinate, clusterId} = cluster
   return (
-    <Marker icon={stationIcon} identifier={`cluster-${clusterId}`} coordinate={coordinate} onPress={onPress} />
+    <Marker style={styles.marker} identifier={`cluster-${clusterId}`} coordinate={coordinate} onPress={onPress} />
   )
 }
 
@@ -52,8 +52,7 @@ const Map: FC<IProps> = ({busstops, onPress}) => {
       customMapStyle={customStylesMap}
       style={styles.map}
       data={buses}
-      // showsMyLocationButton
-      // followsUserLocation
+      showsMyLocationButton
       showsUserLocation
       onMarkerPress={on}
       renderMarker={renderMarker}
