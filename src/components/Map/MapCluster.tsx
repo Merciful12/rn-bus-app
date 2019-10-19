@@ -30,7 +30,7 @@ const renderMarker = (busstop: any) => {
       key={busstop.id}
       coordinate={busstop.location}
       >
-        <Icon size={25} color='mediumblue' name='ios-bus' style={styles.marker} />
+        <Icon size={25} color='mediumblue' name='ios-bus' />
         <Callout tooltip />
     </Marker>
 )}
