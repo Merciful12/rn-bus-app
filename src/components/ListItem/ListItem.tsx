@@ -1,7 +1,5 @@
 import React, { FC, useCallback } from 'react'
 import { StyleSheet, TextStyle, TouchableWithoutFeedback, View, Text} from 'react-native'
-import * as MagicMove from 'react-native-magic-move'
-import 'react-navigation-magic-move'
 
 import Card from '../Card/Card'
 import { IBusstopFavorite } from '../../ducks/busstops'
@@ -21,14 +19,11 @@ const ListItem: FC<IProps> = ({busstop, onPress}) => {
     <TouchableWithoutFeedback onPress={onPressItem}>
       <View>
         <Card>
-          <MagicMove.Text
-            duration={400}
-            useNativeClone
-            id={`title-${busstop.id}`} 
+          <Text
             style={styles.busName}
           >
             {busstop.name}
-          </MagicMove.Text>
+          </Text>
         </Card>
       </View>
     </TouchableWithoutFeedback>

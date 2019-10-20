@@ -1,15 +1,20 @@
 import React from 'react'
-import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation'
+import {useScreens} from 'react-native-screens'
+import createNativeStackNavigator from 'react-native-screens/createNativeStackNavigator'
+import {createBottomTabNavigator} from 'react-navigation-tabs'
+import {createStackNavigator} from 'react-navigation-stack'
+import { createAppContainer } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import BusstopsMapScreen from '../screens/BusstopsMapScreen/BusstopsMapScreen'
 import BusstopsFavoritesScreen from '../screens/BusstopsFavoritesScreen/BusstopsFavoritesScreen'
 import BusstopDetails from '../screens/BusstopDetailsScreen/BusstopDetailsScreen'
-import BusstopDetails2 from '../screens/BusstopDetailsScreen/BusstopDetailsScreen2'
 import { ROUTES } from './routes'
 
 import { getPlatformIcon } from '../utils'
 
+
+useScreens()
 
 const allBusstopsTab1 = createStackNavigator({
   [ROUTES.BusstopsMap]: BusstopsMapScreen,
@@ -23,9 +28,10 @@ const allBusstopsTab1 = createStackNavigator({
 
 const favoritesBusstopsTab2 = createStackNavigator({
   [ROUTES.BusstopsFavorites]: BusstopsFavoritesScreen,
-  [ROUTES.BusstopDetailsTab2]: BusstopDetails2,
+  [ROUTES.BusstopDetailsTab2]: BusstopDetails,
 }, {
   defaultNavigationOptions: {
+    backgroundColor: 'white',
     headerBackTitle: null,
     headerTintColor: 'black',
     headerStyle: {

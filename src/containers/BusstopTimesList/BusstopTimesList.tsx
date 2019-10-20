@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 
-import {Set} from 'immutable'
 import {connect} from 'react-redux'
 
 import {toggleFavoriteRoute, ActionFunction, favoriteRoutesListSelector} from '../../ducks/routes'
@@ -8,7 +7,6 @@ import { IArrival } from '../../graphql/queries'
 import SectionList from '../../components/SectionList/SectionList'
 
 import { separateBySections } from '../../utils'
-import { IStateApp } from '../../redux/reducer'
 
 interface IPops  {
   times: IArrival[],
@@ -29,9 +27,7 @@ const BusstopTimesList: FC<IPops & IStoreProps> = (props) => {
     refetch,
     loading
   } = props
-
   const sections = separateBySections(times, favoriteRoutes)
-
   return (
     <SectionList
       data={sections}
@@ -42,7 +38,7 @@ const BusstopTimesList: FC<IPops & IStoreProps> = (props) => {
   )
 }
 
-const mapStateToProps = (state: IStateApp) => ({
+const mapStateToProps = (state: any) => ({
   favoriteRoutes: favoriteRoutesListSelector(state),
 })
 

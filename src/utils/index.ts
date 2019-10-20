@@ -1,7 +1,6 @@
 import { Platform } from 'react-native'
 import { IArrival } from '../graphql/queries'
 import { ISection } from '../components/SectionList/SectionList'
-import { Set as ImmutableSet } from 'immutable'
 
 export const getPlatformIcon = (iconName: string): string => {
   const prefix = Platform.select({
@@ -13,7 +12,7 @@ export const getPlatformIcon = (iconName: string): string => {
 }
 
 
-type separator = (data: IArrival[], favoriteRoutes: ImmutableSet<string>) => ISection[]
+type separator = (data: IArrival[], favoriteRoutes: Set<string>) => ISection[]
 
 type SectionsObj = {
   [key: string]: number[]
@@ -29,13 +28,13 @@ export const separateBySections:separator = (busTimes, favoriteRoutes) => {
     {}
   )
 
-  const busTimesKeys = Object.keys(busTimesByName)
+  const busTimesKeys = new Set(Object.keys(busTimesByName))
   
   const uniqueBusNames = new Set([
-    ...favoriteRoutes.intersect(busTimesKeys),
+    ...[...favoriteRoutes].filter((v) => !busTimesKeys.has(v)),
     ...busTimesKeys
   ])
-  
+
   const sections: ISection[] = []
   uniqueBusNames.forEach(key => sections.push({
     key,

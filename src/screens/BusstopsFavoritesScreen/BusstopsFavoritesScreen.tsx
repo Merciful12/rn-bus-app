@@ -1,26 +1,19 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet, ViewStyle, FlatList } from 'react-native'
-import {
-  NavigationScreenComponent as NSC,
-  NavigationScreenProps as NSP,
-} from 'react-navigation'
 import { connect } from 'react-redux'
-import * as MagicMove from 'react-native-magic-move'
-import 'react-navigation-magic-move'
-
 
 import { IBusstopFavorite, favoriteBusstopsListSelector } from '../../ducks/busstops'
 import ListItem from '../../components/ListItem/ListItem'
 import { ROUTES } from '../../navigator/routes'
 import EmptyList from '../../components/EmptyList/EmptyList'
-import { IStateApp } from '../../redux/reducer'
+
 
 
 interface IProps {
   favoritesBusstops: IBusstopFavorite[]
 }
 
-const DeailsScreen: NSC<NSP, {}, IProps> = (props) => {
+const DeailsScreen = (props: any) => {
   const {navigation, favoritesBusstops} = props
   const onPress = useCallback(
     (busstop) => navigation.navigate(ROUTES.BusstopDetailsTab2, {busstopId: busstop.id, busstop}),
@@ -36,7 +29,7 @@ const DeailsScreen: NSC<NSP, {}, IProps> = (props) => {
   }
   
   return (
-    <MagicMove.Scene>
+
       <View style={styles.container}>
         {favoritesBusstops.length
           ? <FlatList
@@ -48,11 +41,7 @@ const DeailsScreen: NSC<NSP, {}, IProps> = (props) => {
         }
         
       </View>
-    </MagicMove.Scene>
   )
-}
-DeailsScreen.navigationOptions = {
-  headerTitle: 'Избранные'
 }
 
 interface IStyles {
@@ -67,7 +56,7 @@ const styles = StyleSheet.create<IStyles>({
 })
 
 
-const mapStateToProps = (state: IStateApp) => {
+const mapStateToProps = (state: any) => {
   return {favoritesBusstops: favoriteBusstopsListSelector(state)}
 }
 

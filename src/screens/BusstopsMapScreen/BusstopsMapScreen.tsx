@@ -3,9 +3,11 @@ import { View } from 'react-native'
 import { NavigationScreenComponent as NSC, NavigationScreenProps as NSP } from 'react-navigation'
 import MapCluster from '../../components/Map/MapCluster'
 
+
 import { ROUTES } from '../../navigator/routes'
 
 import busstops from '../../assets/data/busstops.json'
+import Map from '../../components/Map/Map'
 
 const BusstopMap: NSC<NSP> = ({navigation}) => {
   const navigateToDetails = useCallback(
@@ -15,7 +17,7 @@ const BusstopMap: NSC<NSP> = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-        <MapCluster busstops={busstops.busstops} onPress={navigateToDetails} />
+        <Map busstops={busstops.busstops} onPress={navigateToDetails} />
     </View>
   )
 }
