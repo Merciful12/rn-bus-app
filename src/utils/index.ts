@@ -29,9 +29,9 @@ export const separateBySections:separator = (busTimes, favoriteRoutes) => {
   )
 
   const busTimesKeys = new Set(Object.keys(busTimesByName))
-  
+  const currentFavorites = [...favoriteRoutes].filter(route => busTimesKeys.has(route))
   const uniqueBusNames = new Set([
-    ...[...favoriteRoutes].filter((v) => !busTimesKeys.has(v)),
+    ...currentFavorites,
     ...busTimesKeys
   ])
 

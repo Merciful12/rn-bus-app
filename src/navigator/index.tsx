@@ -1,6 +1,5 @@
 import React from 'react'
 import {useScreens} from 'react-native-screens'
-import createNativeStackNavigator from 'react-native-screens/createNativeStackNavigator'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 import {createStackNavigator} from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
@@ -21,6 +20,12 @@ const allBusstopsTab1 = createStackNavigator({
   [ROUTES.BusstopDetailsTab1]: BusstopDetails,
 }, {
   defaultNavigationOptions: {
+    headerStyle: {
+      borderWidth: 0,
+      elevation: 0,
+      shadowRadius: 0,
+      backgroundColor: 'white',
+    },
     headerBackTitle: null,
     headerTintColor: 'black',
   }
@@ -31,13 +36,13 @@ const favoritesBusstopsTab2 = createStackNavigator({
   [ROUTES.BusstopDetailsTab2]: BusstopDetails,
 }, {
   defaultNavigationOptions: {
-    backgroundColor: 'white',
     headerBackTitle: null,
     headerTintColor: 'black',
     headerStyle: {
+      borderWidth: 0,
       elevation: 0,
       shadowRadius: 0,
-      backgroundColor: 'orange',
+      backgroundColor: 'white',
     },
     
   }

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Text, View, ViewStyle, TextStyle, StyleSheet } from 'react-native'
+import { Text, View, ViewStyle, TextStyle, StyleSheet, SafeAreaView } from 'react-native'
 
 import { useDispatch, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -43,26 +43,29 @@ const BusstopDetailsScreen = (props: any) => {
   )
 
   return (
-    <View style={styles.container}>
-      {!loading && data
-        ? (
-          <>
-            <Text style={styles.title}>{data.busstopDetails.name}</Text>
-            <Icon
-              onPress={() => togglebusstop(data.busstopDetails)}
-              name={heartIcon}
-              size={40}
-              style={{ alignSelf: 'flex-end' }}
-              color={isFavoriteBusstop ? 'tomato' : 'grey'}
-            />
-            {data.busstopDetails.busTimes
-              ? <BusstopTimesList times={data.busstopDetails.busTimes} refetch={refetch} loading={loading} />
-              : null}
-          </>
-        )
-        : null
-      }
-    </View>
+      <View style={styles.container}>
+        {!loading && data
+          ? (
+            <>
+              <Text style={styles.title}>{data.busstopDetails.name}</Text>
+              <Icon
+                onPress={() => togglebusstop({
+                  id: data.busstopDetails.id,
+                  name: data.busstopDetails.name
+                })}
+                name={heartIcon}
+                size={40}
+                style={{ alignSelf: 'flex-end' }}
+                color={isFavoriteBusstop ? 'tomato' : 'grey'}
+              />
+              {data.busstopDetails.busTimes
+                ? <BusstopTimesList times={data.busstopDetails.busTimes} refetch={refetch} loading={loading} />
+                : null}
+            </>
+          )
+          : null
+        }
+      </View>
   )
 }
 
@@ -75,6 +78,7 @@ const styles = StyleSheet.create<IStyles>({
   container: {
     flex: 1,
     paddingBottom: 5,
+    paddingTop: 120
   },
   title: {
     fontSize: 20,

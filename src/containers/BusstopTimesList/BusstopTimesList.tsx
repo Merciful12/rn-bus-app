@@ -19,7 +19,7 @@ interface IStoreProps {
   favoriteRoutes: Set<string>
 }
 
-const BusstopTimesList: FC<IPops & IStoreProps> = (props) => {
+const BusstopTimesList = (props) => {
   const {
     times,
     toggleFavoriteRoute,

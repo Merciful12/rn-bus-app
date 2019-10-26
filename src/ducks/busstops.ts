@@ -21,8 +21,10 @@ export interface IBusstopFavorite {
   id: string,
   name: string
 }
-export const reducerState = new Map<string, IBusstopFavorite>()
-export type IreducerState = typeof reducerState
+export interface IreducerState {
+  [key: string]: IBusstopFavorite
+}
+export const reducerState: IreducerState = {}
 
 export interface IAction extends Action<actionTypes> {
   payload: {busstop: IBusstopFavorite}
@@ -30,20 +32,29 @@ export interface IAction extends Action<actionTypes> {
 
 export default function reducer(state = reducerState, action: IAction): IreducerState {
   const {type, payload} = action
+
   switch (type) {
     case actionTypes.TOGGLE_FAVORITE_BUSSTOP:
-      return state.has(payload.busstop.id)
-        ? new Map([...state].filter((b) => b[0] !== payload.busstop.id))
-        : new Map([...state, [payload.busstop.id, payload.busstop]])
+     const {id, name} = payload.busstop
+     const newState = state[payload.busstop.id] === undefined
+     ? {...state, [id]: {id, name}}
+     : removeFromObj(state, id)
+      
+      return newState
    default:
       return state
   }
 }
 
+function removeFromObj(obj: s, idToRemove: string): s {
+  const {[idToRemove]: rem, ...newState} = obj
+  return newState
+}
+
 export const stateSelector = (state: IRootState) => state[moduleName]
-export const favoriteBusstopsListSelector = createSelector(stateSelector, favoriteBusstops => [...favoriteBusstops.values()])
+export const favoriteBusstopsListSelector = createSelector(stateSelector, favoriteBusstops => Object.values(favoriteBusstops))
 export const idSelector = (_: IreducerState, id: string) => id
-export const isFavoriteBusstopSelector = createSelector(stateSelector, idSelector, (favoriteBusstops, id) => favoriteBusstops.has(id))
+export const isFavoriteBusstopSelector = createSelector(stateSelector, idSelector, (favoriteBusstops, id) => !!favoriteBusstops[id])
 
 /**
  * Actions
