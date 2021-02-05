@@ -1,8 +1,7 @@
-import { Record, Set } from 'immutable'
 import { Action } from 'redux'
 import {createSelector} from 'reselect'
 
-import {IStateApp} from '../redux/reducer'
+import { IRootState } from 'src/store'
 
 /**
  * Constants
@@ -15,32 +14,27 @@ export enum actionTypes {
 /**
  * Reducer
  * */
-
-export type IState = ReturnType<typeof routesFavRecord>
-
-export const routesFavRecord = Record({
-  favoriteRoutes: Set<string>(),
-}, 'routesFavRecord')
+export const reducerState = new Set<string>()
+export type IreducerState = typeof reducerState
 
 export interface IAction extends Action<actionTypes> {
   payload: {route: string}
 }
 
-export default function reducer(state = new routesFavRecord(), action: IAction) {
+export default function reducer(state = reducerState, action: IAction) {
   const {type, payload} = action
   switch (type) {
     case actionTypes.TOGGLE_FAVORITE_ROUTE:
-      return state.favoriteRoutes.contains(payload.route)
-        ? state.update('favoriteRoutes', v => v.delete(payload.route))
-        : state.update('favoriteRoutes', v => v.add(payload.route))
-
+      return state.has(payload.route)
+        ? new Set([...state].filter(r => r !== payload.route))
+        : new Set([...state, payload.route])
     default:
       return state
   }
 }
 
-export const stateSelector = (state: IStateApp) => state[moduleName]
-export const favoriteRoutesListSelector = createSelector(stateSelector, (state: IState) => state.favoriteRoutes)
+export const stateSelector = (state: IRootState) => state[moduleName]
+export const favoriteRoutesListSelector = createSelector(stateSelector, (state: IreducerState) => [...state.keys()])
 
 /**
  * Actions

@@ -1,20 +1,20 @@
-import React from 'react'
-import {Text, View, ViewStyle, TextStyle, StyleSheet} from 'react-native'
-import { NavigationScreenComponent as NSC, NavigationScreenProps as NSP } from 'react-navigation'
-import { Paragraph } from 'rn-placeholder'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { Text, View, ViewStyle, TextStyle, StyleSheet, SafeAreaView } from 'react-native'
+
+import { useDispatch, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-import {ActionFunction} from '../../ducks/routes'
-import {toggleFavoriteBusstop, ActionFun, isFavoriteBusstopSelector} from '../../ducks/busstops'
+import { ActionFunction } from '../../ducks/routes'
+import { toggleFavoriteBusstop, ActionFun, isFavoriteBusstopSelector, IBusstopFavorite } from '../../ducks/busstops'
 
 import BusstopTimesList from '../../containers/BusstopTimesList/BusstopTimesList'
-import { useQuery } from 'react-apollo-hooks'
+
 import { IBusstopDetails, IVariables, GET_BUSSTOP } from '../../graphql/queries'
 import { getPlatformIcon } from '../../utils'
-import { IStateApp } from '../../redux/reducer'
 
-interface INavProps extends NSP {
+import { useQuery } from '../../common/hooks'
+
+interface INavProps {
   busstopId: string
 }
 
@@ -25,51 +25,47 @@ interface IStoreProps {
   isFavoriteBusstop: boolean
 }
 
-const BusstopDetailsScreen: NSC<INavProps, {}, IStoreProps> = (props) => {
+const BusstopDetailsScreen = (props: any) => {
   const {
-    toggleFavoriteBusstop,
-    isFavoriteBusstop,
     navigation,
   } = props
+
   const id = navigation.getParam('busstopId')
+  const { data, loading, refetch } = useQuery<IBusstopDetails, IVariables>(GET_BUSSTOP, {id})
+  const isFavoriteBusstop = useSelector((state: any) => { 
 
-  
-  const {loading, data, refetch, error} = useQuery<IBusstopDetails, IVariables>(GET_BUSSTOP, {
-    variables: {id: id},
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true
-  })
+    return isFavoriteBusstopSelector(state, id)})
+  const dispatch = useDispatch()
 
-  if (error) {return <Text>error</Text>}
+  const togglebusstop = useCallback(
+    (b: IBusstopFavorite) => dispatch(toggleFavoriteBusstop(b)),
+    [id]
+  )
 
   return (
-    <View style={styles.container}>
-      <Paragraph
-        animation='fade'
-        width='100%'
-        textSize={30}
-        lineSpacing={50}
-        lineNumber={5}
-        isReady={!loading}
-      >
-        { data && data.busstopDetails
-         ? (
+      <View style={styles.container}>
+        {!loading && data
+          ? (
             <>
               <Text style={styles.title}>{data.busstopDetails.name}</Text>
-              <Icon 
-                onPress={() => toggleFavoriteBusstop(data.busstopDetails)}
+              <Icon
+                onPress={() => togglebusstop({
+                  id: data.busstopDetails.id,
+                  name: data.busstopDetails.name
+                })}
                 name={heartIcon}
                 size={40}
-                style={{alignSelf: 'flex-end'}}
-                color={isFavoriteBusstop ? 'tomato' : 'grey'} 
+                style={{ alignSelf: 'flex-end' }}
+                color={isFavoriteBusstop ? 'tomato' : 'grey'}
               />
-              <BusstopTimesList times={data.busstopDetails.busTimes} refetch={refetch} loading={loading} />
+              {data.busstopDetails.busTimes
+                ? <BusstopTimesList times={data.busstopDetails.busTimes} refetch={refetch} loading={loading} />
+                : null}
             </>
-            )
-        : null  
+          )
+          : null
         }
-      </Paragraph>
-    </View>
+      </View>
   )
 }
 
@@ -82,6 +78,7 @@ const styles = StyleSheet.create<IStyles>({
   container: {
     flex: 1,
     paddingBottom: 5,
+    paddingTop: 120
   },
   title: {
     fontSize: 20,
@@ -93,14 +90,5 @@ const styles = StyleSheet.create<IStyles>({
 
 const heartIcon = getPlatformIcon('heart')
 
-BusstopDetailsScreen.navigationOptions = {
-  headerTitle: 'Остановка'
-}
-const mapStateToProps = (state: any, props: INavProps) => ({
-  isFavoriteBusstop: isFavoriteBusstopSelector(state, props)
-})
 
-const mapDispatchToProps = {
-  toggleFavoriteBusstop,
-}
-export default connect(mapStateToProps, mapDispatchToProps)(BusstopDetailsScreen)
+export default BusstopDetailsScreen

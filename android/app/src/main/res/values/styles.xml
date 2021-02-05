@@ -2,8 +2,8 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">#db6a00</item>
-        <item name="android:colorEdgeEffect">#ff6f00</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">#000000</item>
     </style>
 
 </resources>

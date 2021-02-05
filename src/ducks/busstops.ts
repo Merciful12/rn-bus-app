@@ -1,9 +1,8 @@
-import { Record, Map } from 'immutable'
 import {Action} from 'redux'
 import {createSelector} from 'reselect'
-import { NavigationScreenProps as NSP } from 'react-navigation'
 
-import {IStateApp} from '../redux/reducer'
+import { IRootState } from 'src/store'
+
 /**
  * Constants
  * */
@@ -16,45 +15,47 @@ export enum actionTypes {
  * Reducer
  * */
 
-export type IState = ReturnType<typeof reducerState>
+// export type IState = ReturnType<typeof reducerState>
 
 export interface IBusstopFavorite {
   id: string,
   name: string
 }
-
-export const reducerState = Record({
-  favoriteBusstops: Map<string, IBusstopFavorite>(),
-}, 'BusstopFavRecord')
-
-
-export const BusstopFavRecord1 = Record<IBusstopFavorite>({
-  id: '',
-  name: ''
-}, 'BusstopFavRecord1')
+export interface IreducerState {
+  [key: string]: IBusstopFavorite
+}
+export const reducerState: IreducerState = {}
 
 export interface IAction extends Action<actionTypes> {
   payload: {busstop: IBusstopFavorite}
 }
 
-export default function reducer(state = new reducerState(), action: IAction) {
+export default function reducer(state = reducerState, action: IAction): IreducerState {
   const {type, payload} = action
+
   switch (type) {
     case actionTypes.TOGGLE_FAVORITE_BUSSTOP:
-      return state.favoriteBusstops.has(payload.busstop.id)
-        ? state.deleteIn(['favoriteBusstops', payload.busstop.id])
-        : state.setIn(['favoriteBusstops', payload.busstop.id], new BusstopFavRecord1(payload.busstop))
-
+     const {id, name} = payload.busstop
+     const newState = state[payload.busstop.id] === undefined
+     ? {...state, [id]: {id, name}}
+     : removeFromObj(state, id)
+      
+      return newState
    default:
       return state
   }
 }
 
-export const stateSelector = (state: IStateApp) => state[moduleName]
-export const favoriteBusstopsSelector = createSelector(stateSelector, (state: IState) => state.favoriteBusstops)
-export const favoriteBusstopsListSelector = createSelector(favoriteBusstopsSelector, favoriteBusstops => favoriteBusstops.valueSeq().toArray())
-export const idSelector = (_: IState, props: NSP) => props.navigation.getParam('busstopId')
-export const isFavoriteBusstopSelector = createSelector(favoriteBusstopsSelector, idSelector, (favoriteBusstops, id) => favoriteBusstops.has(id))
+function removeFromObj(obj: s, idToRemove: string): s {
+  const {[idToRemove]: rem, ...newState} = obj
+  return newState
+}
+
+export const stateSelector = (state: IRootState) => state[moduleName]
+export const favoriteBusstopsListSelector = createSelector(stateSelector, favoriteBusstops => Object.values(favoriteBusstops))
+export const idSelector = (_: IreducerState, id: string) => id
+export const isFavoriteBusstopSelector = createSelector(stateSelector, idSelector, (favoriteBusstops, id) => !!favoriteBusstops[id])
+
 /**
  * Actions
  */

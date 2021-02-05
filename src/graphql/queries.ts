@@ -1,38 +1,24 @@
-import { gql } from 'apollo-boost'
-
-const busstopFragment = gql`
-fragment busstopFragment on Busstop {
-  id
-  name
-  longitude
-  latitude
+export const GET_ALL_BUSSTOPS = `
+query getAllBusstops {
+  busstops {
+    id
+    longitude
+    latitude
+  }
 }
 `
 
-export const GET_ALL_BUSSTOPS = gql`
-query getAllBusstops {
-  busstops {
-    ...busstopFragment
-  }
-}${busstopFragment}
-`
-
-export const GET_BUSSTOP = gql`
+export const GET_BUSSTOP = `
 query getBusstop($id: ID!) {
   busstopDetails(id: $id) {
-    ...busstopFragment
+    id
+    name
     busTimes {
       busName
       nextArrival
     }
   }
-}${busstopFragment}
-`
-
-export const TOGGLE_FAVORITE_BUSSTOP = gql`
-  mutation toggleFavorite($id: ID!) {
-    toggleFavorite(id: $id) @client
-  }
+}
 `
 
 export interface IArrival {

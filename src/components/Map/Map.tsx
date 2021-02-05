@@ -15,7 +15,6 @@ const Map: FC<IProps> = ({busstops, onPress}) => (
     style={styles.map}
     onMarkerPress={onPress}
     customMapStyle={customStylesMap}
-    zoomEnabled={false}
     initialRegion={region}
   >
     {busstops.map(busstop => (
